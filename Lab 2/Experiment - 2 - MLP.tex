@@ -1,0 +1,237 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,longtable}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[font=small,skip=0.4pt]{caption}
+\captionsetup{skip=0pt, justification=centering}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\setlist{nosep}
+
+\begin{document}
+
+\begin{center}
+{\Large\textbf{Shiv Nadar University Chennai}}\\
+\textbf{CS3807 -- Deep Learning Laboratory}\\
+\textbf{Experiment 2}\\
+{\large\textbf{Implementation of a Multi-Layer Perceptron (MLP) for Multi-Class Image Classification}}\\[2mm]
+Ankith U Davey \quad 24011101004
+\end{center}
+
+\renewcommand{\arraystretch}{1.25}
+
+\begin{tabular}{|p{3.8cm}|p{8cm}|p{2cm}|}
+\hline
+Degree \& Branch & B.Tech Artificial Intelligence \& Data Science & Semester V\\ \hline
+Subject Code \& Name & CS3807 -- Deep Learning Laboratory & AY: 2026--27\\ \hline
+\end{tabular}
+
+\section*{1. Objective}
+Implement an MLP using TensorFlow/Keras on the Fashion-MNIST dataset. Learn image preprocessing, flattening, model construction, training, evaluation, and automated hyperparameter optimization.
+
+\section*{2. Background Theory}
+An MLP consists of an input layer, hidden layers and an output layer.
+
+\[
+z^{(l)}=W^{(l)}a^{(l-1)}+b^{(l)},\qquad
+a^{(l)}=f(z^{(l)})
+\]
+
+Output layer:
+\[
+\hat y=\mathrm{Softmax}(z)
+\]
+
+Loss:
+\[
+L=-\sum_i y_i\log(\hat y_i)
+\]
+
+Baseline architecture used:
+
+\begin{center}
+784 $\rightarrow$ Dense(128, ReLU) $\rightarrow$ Dense(64, ReLU) $\rightarrow$ Dense(10, Softmax)
+\end{center}
+
+\section*{3. Dataset}
+Dataset: Fashion-MNIST
+
+Training Images: 60,000 \\
+Testing Images: 10,000 \\
+Classes: 10 \\
+Image Size: $28\times28$
+
+Fashion-MNIST images are stored as $28\times28$ matrices. Dense layers require a one-dimensional feature vector, so each image was flattened from $28\times28$ into a vector of length 784, and pixel values were normalized from the raw 0--255 range to $[0,1]$ before training.
+
+\section*{4. Source Code}
+
+The complete source code is available in the accompanying GitHub repository:
+\url{https://github.com/Ankith-Davey/Deep-Learning-Lab-Exp2-MLP}
+
+\section*{5. Hyperparameter Optimization}
+
+Automated hyperparameter optimization was performed using RandomizedSearchCV together with the SciKeras wrapper, searching over the following space:
+
+\begin{center}
+\begin{tabular}{|p{5cm}|p{7cm}|}
+\hline
+Hyperparameter & Candidate Values\\
+\hline
+Hidden Layers & 1, 2, 3\\
+Hidden Neurons & 32, 64, 128, 256\\
+Learning Rate & 0.1, 0.01, 0.001\\
+Batch Size & 16, 32, 64, 128\\
+Epochs & 10, 20, 30\\
+Optimizer & SGD, Adam, RMSProp\\
+Activation Function & ReLU, Tanh, Sigmoid\\
+Dropout Rate (Optional) & 0.0, 0.2, 0.5\\
+\hline
+\end{tabular}
+\end{center}
+
+A baseline MLP was first built and trained on the full 60,000-image training set using the architecture in Section 2. RandomizedSearchCV then sampled 15 combinations from the search space above, evaluated using 5-fold cross-validation on a 15,000-image stratified subsample of the training data (for compute-time reasons). The best combination found was recorded, and a new model was retrained on the full 60,000-image training set using those hyperparameters, then evaluated on the test set and compared against the baseline.
+
+\section*{6. Results}
+
+\textbf{Best Hyperparameters}
+
+\begin{tabular}{|p{6cm}|p{6cm}|}
+\hline
+Hidden Layers & 2\\\hline
+Hidden Neurons & 256\\\hline
+Learning Rate & 0.001\\\hline
+Batch Size & 16\\\hline
+Optimizer & RMSprop\\\hline
+Activation Function & Tanh\\\hline
+Epochs & 30\\\hline
+Dropout & 0.2\\\hline
+Cross-validation Accuracy & 0.8613\\\hline
+Testing Accuracy & 0.8764\\\hline
+\end{tabular}
+
+\vspace{3mm}
+
+\textbf{Performance Comparison}
+
+\begin{tabular}{|p{4cm}|c|c|}
+\hline
+Metric & Baseline & Optimized\\
+\hline
+Accuracy&0.8809&0.8764\\
+Precision&0.8828&0.8782\\
+Recall&0.8809&0.8764\\
+F1-score&0.8813&0.8761\\
+Training Time&125.23s&312.10s\\
+\hline
+\end{tabular}
+
+\section*{7. Plots with Inference}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.8\textwidth]{01_sample_images.eps}
+\caption{Sample images from the Fashion-MNIST dataset.}
+\end{figure}
+\textit{The sample images consist of different types of fashion items such as trousers, t-shirts, bags, sneakers, etc. These are present in the Fashion-MNIST dataset, which is an image dataset with over 70000 (60000 for training and 10000 for testing) grayscale images.}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.7\textwidth]{02_class_distribution.eps}
+\caption{Class distribution of the training set.}
+\end{figure}
+\textit{The training set consists of 60000 images in grayscale. There are a total of 10 classes, where each class has 6000 images. The classes include different types of trousers, sneakers, coats, etc.}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.7\textwidth]{03_train_accuracy.eps}
+\caption{Training accuracy versus epoch.}
+\end{figure}
+\textit{The training accuracy gradually increases as the number of epochs increases, meaning the model learns and updates weights in the right direction, with the highest training accuracy being 0.9373.}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.7\textwidth]{04_val_accuracy.eps}
+\caption{Validation accuracy versus epoch.}
+\end{figure}
+\textit{The validation accuracy also increases gradually like the training accuracy, but the increase is less smooth than the training accuracy.}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.7\textwidth]{05_train_loss.eps}
+\caption{Training loss versus epoch.}
+\end{figure}
+\textit{The training loss decreases as the number of epochs increases, which also supports the Training Accuracy vs Epoch graph. But the training loss never becomes zero, which means the model does not fully reach convergence by epoch 20.}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.7\textwidth]{06_val_loss.eps}
+\caption{Validation loss versus epoch.}
+\end{figure}
+\textit{The validation loss initially drops for the first 4 epochs, but keeps increasing with the number of epochs, with the loss rising to around 0.42 by the final epoch.}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{07_confusion_matrix.png}
+\caption{Confusion matrix of the baseline model on the test set.}
+\end{figure}
+\textit{The confusion matrix shows that most classes in the Fashion-MNIST dataset were correctly classified, since the highest values were concentrated along the diagonal. The remaining errors occurred mainly between a few visually similar clothing categories, which suggests the model found these classes difficult to distinguish.}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.7\textwidth]{08_hyperparameter_search.eps}
+\caption{Hyperparameter search results across trials.}
+\end{figure}
+\textit{The hyperparameter search graph showed a significant improvement in cross-validation accuracy once an effective combination of parameters was identified. But after this initial increase, the remaining trials resulted only in small improvements, which indicates that the hyperparameter tuning mainly fine-tuned an already well-performing model rather than producing major performance gains.}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.6\textwidth]{09_accuracy_comparison.eps}
+\caption{Best model accuracy comparison: baseline versus optimized.}
+\end{figure}
+\textit{Although the optimized model achieved the highest cross-validation accuracy during hyperparameter tuning, the baseline model recorded a slightly higher test accuracy. This suggests that the optimized model did not generalize better to unseen (test) data, which highlights the fact that extensive hyperparameter tuning does not always guarantee improved performance.}
+
+\section*{8. Discussion}
+
+\begin{enumerate}[leftmargin=*]
+
+\item \textbf{Which optimization method was used?}
+
+The RandomizedSearchCV method is used instead of GridSearchCV, which runs 15 randomly sampled combinations from the search space with 5-fold cross-validation, rather than testing every possible combination, which also reduces the compute time.
+
+\item \textbf{Which hyperparameters were selected?}
+
+The best configuration emerged to be 2 hidden layers with 256 neurons per layer and optimizer as RMSprop; learning rate equal to 0.001, tanh activation, dropout rate 0.2, batch size 16, and 30 epochs, which gave a cross-validation accuracy of 0.8613.
+
+\item \textbf{Did optimization improve performance?}
+
+No, the optimization did not improve performance on the actual test set. The optimized model scored an accuracy of 87.64\%, which was slightly below the baseline model's accuracy of 88.09\%. This was because the search itself ran on a 15,000-image subsample of the training data rather than the full 60,000 images, due to compute-time reasons, so the "best" hyperparameters were the best for that smaller subsample and not necessarily for the full dataset.
+
+\item \textbf{Which hyperparameter had the greatest impact?}
+
+The hyperparameters which had the greatest impact on model performance were the activation function together with the learning rate. The large jump in cross-validation accuracy indicates that selecting an appropriate activation function and learning rate enables the convergence of the model, while changes to the remaining hyperparameters mainly provided incremental improvements. This is also supported by the best-performing configuration, which used tanh as its activation function with a learning rate of 0.001, achieving a mean CV accuracy of 86.13\%.
+
+\item \textbf{Compare Grid Search and Randomized Search.}
+
+Grid Search tests every possible combination in the search space, which is exhaustive in nature but also guarantees the best combination within that grid. The problem is that it becomes extremely slow as the number of hyperparameters grows. For example, in this experiment, the search space has $3\times4\times3\times4\times3\times3\times3\times3 = 11{,}664$ combinations, which would be computationally difficult to fully grid-search with 5-fold CV. Randomized Search instead samples a fixed number of random combinations, trading a guarantee of finding the true best combination for a much faster and more practical search.
+
+\item \textbf{Recommend the best MLP configuration.}
+
+The original baseline configuration (784$\rightarrow$128$\rightarrow$64$\rightarrow$10, Adam optimizer, ReLU activation, batch size 32, 20 epochs) is a better practical choice, as it scored higher on the actual test set and trained in less than half the time. But with further optimization, running the hyperparameter search on the full training set (60,000 images) rather than 15,000 images may produce a configuration that generalizes better to the final model.
+
+\end{enumerate}
+
+\section*{9. Conclusion}
+
+This experiment involved training an MLP model for image classification on the Fashion-MNIST dataset. The baseline model which was a simple 3-layer network achieved an accuracy of 88.09\% test accuracy. An automated hyperparameter search was run to try and improve on that baseline but it gave a model with slightly less accuracy (87.64\%). But this is because the search ran only on a subsample of 15,000 images instead of the full 60,000 due to the constraint of computation time. So the best combination it found was  the best combination for that smaller subset of data and not necessarily for the full dataset. The accuracy and loss curves also showed the baseline model was slightly overfitting, since training accuracy kept climbing past 93\% while validation performance leveled off and also got a little worse in the later epochs. So overall, this experiment proved that running an optimization process doesn't automatically mean a better model for this given subsample
+
+\section*{10. References}
+\begin{enumerate}
+\item Goodfellow et al., \emph{Deep Learning}.
+\item Bishop, \emph{Pattern Recognition and Machine Learning}.
+\item Haykin, \emph{Neural Networks and Learning Machines}.
+\item Fashion-MNIST Dataset.
+\item TensorFlow/Keras Documentation.
+\end{enumerate}
+
+\end{document}
