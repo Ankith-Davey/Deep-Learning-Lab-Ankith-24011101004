@@ -7,6 +7,7 @@ Lab experiments for CS3807 -- Deep Learning Laboratory, B.Tech Artificial Intell
 ```
 ├── Lab 1/   # Single Layer Perceptron
 ├── Lab 2/   # Multi-Layer Perceptron
+├── Lab 3/   # Convolutional Neural Network
 └── README.md
 ```
 
@@ -21,6 +22,12 @@ Lab experiments for CS3807 -- Deep Learning Laboratory, B.Tech Artificial Intell
 - Multi-class image classification on Fashion-MNIST using TensorFlow/Keras.
 - Hyperparameter optimization via RandomizedSearchCV + SciKeras.
 - Includes an MLP implemented from scratch (NumPy) to solve the XOR problem, demonstrating why a single-layer perceptron fails on non-linearly separable data.
+
+## Lab 3 -- Convolutional Neural Network (CNN)
+
+- Multi-class image classification on CIFAR-10 using TensorFlow/Keras.
+- Convolution, pooling, and feature map visualization studied directly: kernel size, stride/padding, and max vs. average pooling comparisons.
+- Includes hyperparameter-style comparisons on activation function (ReLU vs. Sigmoid) and filter count (16 vs. 64).
 
 ## Author
 
