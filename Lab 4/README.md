@@ -18,7 +18,7 @@ metrics — precision, recall, F1, confusion matrix)
 
 ## How to run
 
-Open `Experiment_4_epochs10_20.ipynb` in Google Colab on a GPU runtime
+Open `Experiment_4.ipynb` in Google Colab on a GPU runtime
 (Runtime → Change runtime type → T4 GPU). Upload `kaggle.json` to the Colab
 sidebar when prompted, then run cells sequentially. Total runtime is
 roughly 80–130 minutes on GPU — the primary model's transfer learning and
