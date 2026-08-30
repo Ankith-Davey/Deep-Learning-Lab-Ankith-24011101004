@@ -9,6 +9,7 @@ Lab experiments for CS3807 -- Deep Learning Laboratory, B.Tech Artificial Intell
 ├── Lab 2/   # Multi-Layer Perceptron
 ├── Lab 3/   # Convolutional Neural Network
 ├── Lab 4/   # Transfer Learning (CNN Architecture Comparison)
+├── Lab 5/   # CNN Training, Regularization, Optimization, Hyperparameter Tuning, Transfer Learning and Cross-Validation
 └── README.md
 ```
 
@@ -35,6 +36,13 @@ Lab experiments for CS3807 -- Deep Learning Laboratory, B.Tech Artificial Intell
 - Comparative study of deep CNN architectures on CIFAR-10 using TensorFlow/Keras: LeNet-5 and AlexNet trained from scratch, VGG16/ResNet50/InceptionV3 via frozen-base transfer learning, and MobileNetV2 taken through a full transfer-learning-plus-fine-tuning pipeline.
 - One-factor-at-a-time hyperparameter study (learning rate, batch size, epochs, optimizer, dense units, frozen layers) against a fixed baseline.
 - GoogleNet's row in the architecture comparison uses InceptionV3 as a labeled stand-in, since no pretrained GoogleNet weights exist in any mainstream library.
+
+## Lab 5 -- Comprehensive Study of CNN Training, Regularization, Optimization, Hyperparameter Tuning, Transfer Learning and Cross-Validation
+
+- Systematic study of weight initialization strategies (zero, random, Xavier, He), regularization techniques (L2, Dropout, Batch Normalization), and optimization algorithms (SGD, Momentum, RMSProp, Adam) on the Oxford-IIIT Pet dataset (37 cat and dog breeds) using MobileNetV2.
+- Hyperparameter sweeps on learning rate, batch size, and dropout rate, with one-factor-at-a-time analysis to isolate effects.
+- Transfer learning study comparing frozen-base feature extraction vs. fine-tuning with partial backbone unfreezing, demonstrating that insufficient training epochs limit fine-tuning convergence under cross-validation constraints.
+- Model selection via 5-fold cross-validation across four configurations, with final evaluation on a held-out test set. Final model achieved 91.17\% $\pm$ 1.26\% cross-validation accuracy and 89.83\% test accuracy, demonstrating that initialization and optimizer choice had substantially larger impact than regularization techniques on frozen-head transfer learning.
 
 ## Author
 
