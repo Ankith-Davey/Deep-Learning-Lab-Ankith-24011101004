@@ -5,13 +5,14 @@ Lab experiments for CS3807 -- Deep Learning Laboratory, B.Tech Artificial Intell
 ## Structure
 
 ```
-├── Lab 1/   # Single Layer Perceptron
-├── Lab 2/   # Multi-Layer Perceptron
-├── Lab 3/   # Convolutional Neural Network
-├── Lab 4/   # Transfer Learning (CNN Architecture Comparison)
-├── Lab 5/   # CNN Training, Regularization, Optimization, Hyperparameter Tuning, Transfer Learning and Cross-Validation
-├── Lab 6/   # RNN, LSTM and GRU for Sequence Learning and Video Understanding
-├── Lab 7/   # Autoencoders, Convolutional Autoencoders, Denoising Autoencoders and Variational Autoencoders
+├── Lab 1/       # Single Layer Perceptron
+├── Lab 2/       # Multi-Layer Perceptron
+├── Lab 3/       # Convolutional Neural Network
+├── Lab 4/       # Transfer Learning (CNN Architecture Comparison)
+├── Lab 5/       # CNN Training, Regularization, Optimization, Hyperparameter Tuning, Transfer Learning and Cross-Validation
+├── Lab 6/       # RNN, LSTM and GRU for Sequence Learning and Video Understanding
+├── Lab 7/       # Autoencoders, Convolutional Autoencoders, Denoising Autoencoders and Variational Autoencoders
+├── Lab 8 & 9/   # Effect of Attention Type and Attention Position in a Pretrained ResNet50
 └── README.md
 ```
 
@@ -61,6 +62,14 @@ Lab experiments for CS3807 -- Deep Learning Laboratory, B.Tech Artificial Intell
 - Denoising convolutional autoencoder trained against Gaussian (sigma = 0.1/0.2/0.3) and salt-and-pepper (p = 0.05/0.10/0.20) corruption with the clean image as target.
 - Variational autoencoder with reparameterization trick and 2D latent space visualization, extended with latent dimension 8, a beta-VAE ablation (beta = 0.5/1.0/5.0), random generation (25 and 100 samples), and latent interpolation including centroid-based interpolation between the most separated digit classes.
 - Per-image reconstruction error distribution and high-error sample analysis for the fully connected autoencoder. The convolutional autoencoder reached 0.9751 SSIM against 0.7452 for the fully connected autoencoder using roughly a third of the parameters, while the VAE (latent 2) had the weakest reconstruction (SSIM 0.5007) in exchange for a structured, samplable latent space in which only digits 0 and 1 separated cleanly.
+
+## Lab 8 & 9 -- Effect of Attention Type and Attention Position in a Pretrained ResNet50
+
+- Five-class flower classification on TensorFlow Flowers (3,670 images, stratified 70/15/15 split with fixed seed 109) using an ImageNet-pretrained ResNet50 in TensorFlow/Keras, with the same split, augmentation and two-phase training (frozen backbone, then conv5_x fine-tuning) reused across all sixteen runs for a controlled comparison.
+- Attention-type ablation at P3 (after conv4_x) comparing channel (SE-style), spatial, sequential channel--spatial, lightweight self-attention and combined attention against the plain baseline, plus ECA and CBAM as additional mechanisms.
+- Attention-position ablation inserting the same channel--spatial block after conv2_x, conv3_x, conv4_x and conv5_x (P1 to P4), multi-stage attention (P3+P4 and P2+P3+P4), attention order (channel--spatial vs. spatial--channel) and spatial kernel size (3/5/7), with accuracy, macro F1, parameters, inference time and training time recorded for every run.
+- Qualitative analysis using confusion matrices, Grad-CAM for the baseline and attention models, and internal attention maps (channel weights, spatial maps at P2/P3/P4 and self-attention responses) on the same test images.
+- The baseline reached 92.74\% test accuracy and 13 of the 15 attention runs scored below it, with ECA (5 added parameters) and SE both at 92.56\%. The internal maps showed the modules stayed close to inactive (a nearly flat spatial gate, an almost fixed channel gate and a self-attention scale of about -0.02), and the only consistent effect was by class, where daisy improved and tulips got worse.
 
 ## Author
 
